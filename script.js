@@ -2,7 +2,7 @@ const fs = require('fs');
 const fetch = require('node-fetch');
 const nodemailer = require('nodemailer');
 
-const API_URL = 'your_api_endpoint_here';
+const API_URL = 'https://www.googleapis.com/customsearch/v1?q=("Software Developer" OR "Software Engineer") Israel&exactTerms=junior&excludeTerms=Senior,Lead,Experienced,Manager,Architect,Principal,Mid,Mid-level,Midlevel,"Mid Level","Mid Senior","Mid-Senior","Team Lead","Director","Head","Tech Lead"l&gl=IL&cx=YOUR_CX&key=YOUR_GOOGLE_API_KEY';
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
