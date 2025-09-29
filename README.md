@@ -16,6 +16,12 @@ Perfect if you're a student, junior developer, or job seeker who wants to be **f
 - Repeats automatically every **30 minutes**.
 
 ---
+## Requirements to Run
+
+Before running the script, make sure you have the following ready:
+
+### System Requirements
+- [Node.js](https://nodejs.org/) installed
 
 ## ⚙️ Setup Instructions
 
@@ -25,6 +31,7 @@ Perfect if you're a student, junior developer, or job seeker who wants to be **f
 git clone https://github.com/OfekSagiv/job-scraper.git
 cd job-scraper
 npm install
+node script.js  
 ```
 
 ---
