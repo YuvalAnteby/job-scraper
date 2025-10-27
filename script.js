@@ -2,7 +2,7 @@ import 'dotenv/config';
 import fs from 'fs';
 
 import sendTelegram from './TelegramBot.js';
-import {DATE_RESTRICT, exactTerms, JOB_SITES, query} from "./ScrapingParams.js";
+import {DATE_RESTRICT, exactTerms, excludeTerms, JOB_SITES, MAX_PAGES, query} from "./ScrapingParams.js";
 
 
 const apiKey = process.env.GOOGLE_API_KEY;
@@ -17,15 +17,17 @@ if (!apiKey || !cxKey) {
 // Helper to build URL with proper params (exactTerms / excludeTerms are separate params)
 function buildSearchUrl(start = 1) {
     const sitesFragment = JOB_SITES.map(s => `site:${s}`).join(' OR ');
+    const siteInurlFilter = 'inurl:/jobs/ -inurl:/jobs/search';
+
     // base query: job title OR synonyms and required keyword(s)
-    const baseQuery = `${query} ${exactTerms} ${sitesFragment}`;
+    const baseQuery = `${query} ${sitesFragment} ${siteInurlFilter}`;
 
     const params = new URLSearchParams({
         key: apiKey,
         cx: cxKey,
         q: baseQuery,
-        //exactTerms,
-        //excludeTerms.join(' '),
+        exactTerms: exactTerms || '',
+        excludeTerms: excludeTerms || '',
         gl: 'IL', // geolocation hint
         cr: 'countryIL', // country restrict
         dateRestrict: DATE_RESTRICT || undefined,
@@ -56,7 +58,7 @@ function normalizeUrl(raw) {
  * Fetches jobs using the given params in the Google API
  * @returns {Promise<*|*[]>} list of the roles as an object made of title, link and snippet
  */
-async function fetchJobs({maxPages = 3, pageDelayMs = 400} = {}) {
+async function fetchJobs({maxPages = MAX_PAGES, pageDelayMs = 400} = {}) {
     const seen = new Set();
     const results = [];
 
@@ -175,7 +177,6 @@ checkAndSend()
     .then(() => console.log('====== Done! ======'))
     .catch(err => console.error('====== Fatal error ======\n', err));
 
-// Run every hour
-const MINUTES_INTERVAL = 2;
-//const MINUTES_INTERVAL = 60;
+// Run second hour
+const MINUTES_INTERVAL = 120;
 setInterval(checkAndSend, MINUTES_INTERVAL * 60 * 1000);
